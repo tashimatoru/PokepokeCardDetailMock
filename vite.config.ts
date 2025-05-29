@@ -6,4 +6,7 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   base: 'PokepokeCardDetailMock',
+  server: {
+    port: 12345,
+  },
 });
