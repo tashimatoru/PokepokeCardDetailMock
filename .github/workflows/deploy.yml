@@ -5,6 +5,11 @@ on:
     branches:
       - master
 
+permissions: # ★ここを追加★
+  contents: write
+  pages: write
+  id-token: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
