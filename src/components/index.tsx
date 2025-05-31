@@ -7,16 +7,32 @@ import { imageItemStyle, fullscreenImageItemStyle } from './content.css';
 function Index() {
   return (
     <>
-      <Fullscreen
-      open={true}
-        src="/PokepokeCardDetailMock/player/images/dummy_player_card02.png"
-        imageClassName={fullscreenImageItemStyle}
+      <div
+        style={{
+          userSelect: 'none',
+        }}
       >
-        <Img
-        src="/PokepokeCardDetailMock/player/images/dummy_player_card02.png"
-          className={imageItemStyle}
-        />
-      </Fullscreen>
+        <Fullscreen
+          src="/PokepokeCardDetailMock/player/images/dummy_player_card01.png"
+          imageClassName={fullscreenImageItemStyle}
+        >
+          <Img
+          src="/PokepokeCardDetailMock/player/images/dummy_player_card01.png"
+            className={imageItemStyle}
+          />
+        </Fullscreen>
+
+        <Fullscreen
+        open={true}
+          src="/PokepokeCardDetailMock/player/images/dummy_player_card02.png"
+          imageClassName={fullscreenImageItemStyle}
+        >
+          <Img
+          src="/PokepokeCardDetailMock/player/images/dummy_player_card02.png"
+            className={imageItemStyle}
+          />
+        </Fullscreen>
+      </div>
     </>
   );
 }

@@ -20,24 +20,29 @@ export const Type001 = ({ src, alt, className, style }: Props) => {
   const [isDragging, setIsDragging] = useState(false);
   const touchStart = useRef({ x: 0, y: 0 });
 
-  // タッチイベント
+  // タッチイベントの安定化: タッチ開始時にmove座標をリセットし、タッチ終了時に傾きを必ずリセット
+  const [touchActive, setTouchActive] = useState(false);
+
   const handleTouchStart = (e: React.TouchEvent) => {
     const touch = e.touches[0];
     touchStart.current = { x: touch.clientX, y: touch.clientY };
+    setTouchActive(true);
   };
   const handleTouchMove = (e: React.TouchEvent) => {
-    e.preventDefault(); // スクロールを防止
+    if (!touchActive) return;
+    e.preventDefault();
     const touch = e.touches[0];
     const dx = touch.clientX - touchStart.current.x;
     const dy = touch.clientY - touchStart.current.y;
-    const maxY = 40; // 30 → 40
-    const maxX = 30; // 20 → 30
-    const y = Math.max(-maxY, Math.min(maxY, dx / 2)); // 5 → 2
-    const x = Math.max(-maxX, Math.min(maxX, -dy / 2)); // 5 → 2
+    const maxY = 40;
+    const maxX = 30;
+    const y = Math.max(-maxY, Math.min(maxY, dx / 2));
+    const x = Math.max(-maxX, Math.min(maxX, -dy / 2));
     setTilt({ x, y });
   };
   const handleTouchEnd = () => {
-    setTilt({ x: 0, y: 0 }); // 離したら元に戻す
+    setTilt({ x: 0, y: 0 });
+    setTouchActive(false);
   };
 
   const handleWindowMouseMove = useCallback(
@@ -81,7 +86,12 @@ export const Type001 = ({ src, alt, className, style }: Props) => {
   };
 
   return (
-    <div className={containerStyle}>
+    <div className={containerStyle}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      onTouchCancel={handleTouchEnd}
+    >
       <Img
         src={src}
         alt={alt}
@@ -91,9 +101,6 @@ export const Type001 = ({ src, alt, className, style }: Props) => {
           transform: `perspective(600px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
           ...style,
         }}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
         onMouseDown={handleMouseDown}
         draggable={false}
       />
@@ -106,7 +113,6 @@ export const Type001 = ({ src, alt, className, style }: Props) => {
           transition: isDragging
             ? 'none'
             : 'opacity 0.2s, background 0.2s, transform 0.2s',
-          //zIndex: 2,
           transform: `perspective(600px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
         }}
       />
