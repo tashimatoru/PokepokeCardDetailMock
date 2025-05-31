@@ -56,20 +56,29 @@ function TiltCard() {
     const container = containerRef.current;
     if (!container) return;
 
+    let lastX = 0;
+    let lastY = 0;
+    let ticking = false;
+
     const touchMoveHandler = (e: TouchEvent) => {
       if (e.cancelable) e.preventDefault();
       const touch = e.touches[0];
-      const dx = touch.clientX - touchStart.current.x;
-      const dy = touch.clientY - touchStart.current.y;
-      const maxY = 30;
-      const maxX = 20;
-      const y = Math.max(-maxY, Math.min(maxY, dx / 5));
-      const x = Math.max(-maxX, Math.min(maxX, -dy / 5));
-      setTilt({ x, y });
+      lastX = touch.clientX - touchStart.current.x;
+      lastY = touch.clientY - touchStart.current.y;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const maxY = 30;
+          const maxX = 20;
+          const y = Math.max(-maxY, Math.min(maxY, lastX / 5));
+          const x = Math.max(-maxX, Math.min(maxX, -lastY / 5));
+          setTilt({ x, y });
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
     container.addEventListener("touchmove", touchMoveHandler, { passive: false });
-
     return () => {
       container.removeEventListener("touchmove", touchMoveHandler);
     };
