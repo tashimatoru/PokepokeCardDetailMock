@@ -11,6 +11,7 @@ function App() {
     touchStart.current = { x: touch.clientX, y: touch.clientY };
   };
   const handleTouchMove = (e: React.TouchEvent) => {
+    e.preventDefault(); // スクロールを防止
     const touch = e.touches[0];
     const dx = touch.clientX - touchStart.current.x;
     const dy = touch.clientY - touchStart.current.y;
@@ -66,7 +67,15 @@ function App() {
   return (
     <>
       <div>
-        <div style={{ position: "relative", display: "inline-block" }}>
+        <div style={{ position: "relative", 
+              margin: "0 auto",
+              width: "70%",
+
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+
+        }}>
           <img
             src="/PokepokeCardDetailMock/img/card_1.png"
             style={{
