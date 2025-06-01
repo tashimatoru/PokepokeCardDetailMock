@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { useState, useEffect, useCallback } from 'react';
 import Backdrop from '@mui/material/Backdrop';
-import { Type001 } from '../type001';
+import { Viewer } from '../type001';
 
 import {
   containerStyle,
@@ -16,9 +16,14 @@ type Props = {
   className?: string;
   imageClassName?: string;
   backdropClassName?: string;
+  reflectionLayerClassName?: string;
   style?: React.CSSProperties;
   onOpen?: () => void;
   onClose?: () => void;
+  enableReflectionLayer?: boolean;
+  noResetOnDrop?: boolean;
+  maxX?: number;
+  maxY?: number;
 };
 
 export const Fullscreen = ({
@@ -27,9 +32,14 @@ export const Fullscreen = ({
   src,
   className,
   imageClassName,
+  reflectionLayerClassName,
   backdropClassName,
   onOpen,
   onClose,
+  enableReflectionLayer = false,
+  noResetOnDrop = false,
+  maxX = 10,
+  maxY = 20,
 }: Props) => {
   // 開閉フラグ
   const [stateOpen, setStateOpen] = useState(open);
@@ -80,7 +90,17 @@ export const Fullscreen = ({
         open={!!stateOpen}
         className={classNames(backdropStyle, backdropClassName)}
       >
-        {stateOpen && <Type001 src={src} className={imageClassName} />}
+        {stateOpen && (
+          <Viewer
+            src={src}
+            maxX={maxX}
+            maxY={maxY}
+            enableReflectionLayer={enableReflectionLayer}
+            noResetOnDrop={noResetOnDrop}
+            className={imageClassName}
+            reflectionLayerClassName={reflectionLayerClassName}
+          />
+        )}
         <div className={classNames(closeContainerStyle)} onClick={handleClose}>
           close
         </div>
